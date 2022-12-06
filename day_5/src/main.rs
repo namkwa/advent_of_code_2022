@@ -3,10 +3,10 @@ fn main() {
     let input = fs::read_to_string("day_5/src/input.txt").unwrap();
 
     let input: Vec<&str> = input.lines().collect();
-    star1(input);
+    star2(input);
 }
 
-fn star1(input: Vec<&str>) {
+fn star2(input: Vec<&str>) {
     let mut stacks: Vec<Vec<char>> = Vec::new();
     stacks.push(vec!['B', 'W', 'N']);
     stacks.push(vec!['L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B']);
