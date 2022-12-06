@@ -1,10 +1,14 @@
 use std::{collections::VecDeque, fs};
 fn main() {
-    let input = fs::read_to_string("day_6/src/input.txt").unwrap();
-    star1(input.chars().collect(), 14);
+    let input = fs::read_to_string("day_6/src/input.txt")
+        .unwrap()
+        .chars()
+        .collect();
+    star1(&input, 14);
+    star1(&input, 4)
 }
 
-fn star1(input: Vec<char>, marker_size: usize) {
+fn star1(input: &Vec<char>, marker_size: usize) {
     let marker_size = marker_size - 1;
     let mut marker: VecDeque<char> = VecDeque::new();
     for i in 0..marker_size {
