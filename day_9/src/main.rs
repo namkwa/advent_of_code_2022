@@ -8,31 +8,34 @@ fn main() {
 
 fn star1(input: Vec<&str>) {
     let mut visited_positions: HashSet<(i32, i32)> = HashSet::new();
-    let mut head_position: (i32, i32) = (0, 0);
-    let mut tail_position: (i32, i32) = (0, 0);
-    visited_positions.insert(tail_position);
+    let mut rope: Vec<(i32, i32)> = vec![(0, 0); 10];
+    visited_positions.insert((0, 0));
     for line in input {
         let (direction, amount) = line.split_once(' ').unwrap();
         for _ in 0..amount.parse::<usize>().unwrap() {
             match direction.chars().nth(0).unwrap() {
-                'R' => head_position.0 += 1,
-                'L' => head_position.0 -= 1,
-                'U' => head_position.1 += 1,
-                'D' => head_position.1 -= 1,
-                _ => panic!(),
+                'R' => rope[0].0 += 1,
+                'L' => rope[0].0 -= 1,
+                'U' => rope[0].1 += 1,
+                'D' => rope[0].1 -= 1,
+                _ => unreachable!(),
             }
-            let mut xdiff = head_position.0 - tail_position.0;
-            let mut ydiff = head_position.1 - tail_position.1;
-            while xdiff.abs() >= 2 || ydiff.abs() >= 2 {
-                if xdiff != 0 {
-                    tail_position.0 += xdiff / (xdiff.abs());
+            for idx in 1..10 {
+                let mut xdiff = rope[idx - 1].0 - rope[idx].0;
+                let mut ydiff = rope[idx - 1].1 - rope[idx].1;
+                while xdiff.abs() >= 2 || ydiff.abs() >= 2 {
+                    if xdiff != 0 {
+                        rope[idx].0 += xdiff / (xdiff.abs());
+                    }
+                    if ydiff != 0 {
+                        rope[idx].1 += ydiff / (ydiff.abs());
+                    }
+                    if idx == 9 {
+                        visited_positions.insert(rope[idx]);
+                    }
+                    xdiff = rope[idx].0 - rope[idx - 1].0;
+                    ydiff = rope[idx].1 - rope[idx - 1].1;
                 }
-                if ydiff != 0 {
-                    tail_position.1 += ydiff / (ydiff.abs());
-                }
-                visited_positions.insert(tail_position);
-                xdiff = head_position.0 - tail_position.0;
-                ydiff = head_position.1 - tail_position.1;
             }
         }
     }
