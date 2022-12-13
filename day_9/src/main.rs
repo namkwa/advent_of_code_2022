@@ -8,64 +8,33 @@ fn main() {
 
 fn star1(input: Vec<&str>) {
     let mut visited_positions: HashSet<(i32, i32)> = HashSet::new();
-    let mut current_x = 0;
-    let mut current_y = 0;
-    let mut current_direction: char = input.get(0).unwrap().chars().nth(0).unwrap();
-    let mut current_orientation: Orientation = get_orientation(current_direction);
+    let mut head_position: (i32, i32) = (0, 0);
+    let mut tail_position: (i32, i32) = (0, 0);
+    visited_positions.insert(tail_position);
     for line in input {
-        println!("{} {:?}", line, (current_x, current_y));
-        if current_orientation != get_orientation(line.chars().nth(0).unwrap()) {
-            current_orientation = get_orientation(line.chars().nth(0).unwrap());
-            if current_orientation == Orientation::Horizontal {
-                match current_direction {
-                    'U' => {
-                        current_x -= 1;
-                        current_direction = 'U';
-                    }
-                    'D' => {
-                        current_x += 1;
-                        current_direction = 'D';
-                    }
-                    _ => panic!(),
+        let (direction, amount) = line.split_once(' ').unwrap();
+        for _ in 0..amount.parse::<usize>().unwrap() {
+            match direction.chars().nth(0).unwrap() {
+                'R' => head_position.0 += 1,
+                'L' => head_position.0 -= 1,
+                'U' => head_position.1 += 1,
+                'D' => head_position.1 -= 1,
+                _ => panic!(),
+            }
+            let mut xdiff = head_position.0 - tail_position.0;
+            let mut ydiff = head_position.1 - tail_position.1;
+            while xdiff.abs() >= 2 || ydiff.abs() >= 2 {
+                if xdiff != 0 {
+                    tail_position.0 += xdiff / (xdiff.abs());
                 }
-                continue;
-            } else {
-                match current_direction {
-                    'R' => {
-                        current_x += 1;
-                        current_direction = 'R';
-                    }
-                    'L' => {
-                        current_x -= 1;
-                        current_direction = 'L';
-                    }
-                    _ => panic!(),
+                if ydiff != 0 {
+                    tail_position.1 += ydiff / (ydiff.abs());
                 }
-                continue;
+                visited_positions.insert(tail_position);
+                xdiff = head_position.0 - tail_position.0;
+                ydiff = head_position.1 - tail_position.1;
             }
         }
-        match line.chars().nth(0).unwrap() {
-            'R' => current_x += line.chars().nth(2).unwrap().to_digit(10).unwrap() as i32,
-            'L' => current_x -= line.chars().nth(2).unwrap().to_digit(10).unwrap() as i32,
-            'U' => current_y += line.chars().nth(2).unwrap().to_digit(10).unwrap() as i32,
-            'D' => current_y -= line.chars().nth(2).unwrap().to_digit(10).unwrap() as i32,
-            _ => panic!(),
-        }
-        visited_positions.insert((current_x, current_y));
     }
     println!("{}", visited_positions.len());
-}
-
-fn get_orientation(orientation: char) -> Orientation {
-    match orientation {
-        'R' | 'L' => return Orientation::Horizontal,
-        'U' | 'D' => return Orientation::Vertical,
-        _ => return Orientation::Vertical,
-    }
-}
-
-#[derive(PartialEq)]
-enum Orientation {
-    Horizontal,
-    Vertical,
 }
