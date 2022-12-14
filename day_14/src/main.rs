@@ -22,15 +22,12 @@ fn star1(input: Vec<&str>) {
         if x < max_x {
             if *cave.get(y + 1).unwrap().get(x).unwrap() == '.' {
                 y += 1;
-                mid += 1;
             } else if *cave.get(y + 1).unwrap().get(x - 1).unwrap() == '.' {
                 y += 1;
                 x -= 1;
-                left += 1;
             } else if *cave.get(y + 1).unwrap().get(x + 1).unwrap() == '.' {
                 y += 1;
                 x += 1;
-                right += 1;
             } else {
                 cave[y][x] = 'o';
                 y = 0;
